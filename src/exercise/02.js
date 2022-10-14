@@ -3,18 +3,28 @@
 
 import * as React from 'react'
 
-function Greeting({initialName = ''}) {
-  const [name, setName] = React.useState(
-    () => window.localStorage.getItem('name') ?? initialName, // "polling" value from localStorage before assigning name
+// React naming convention - define custom hooks by prefixing with "use"
+// A custom hook is a function that uses hooks.
+function useLocalStorageState(key, defaultValue = '') {
+  const [state, setState] = React.useState(
+    () => window.localStorage.getItem(key) ?? defaultValue, // "polling" value from localStorage before assigning name
   )
 
   React.useEffect(() => {
-    window.localStorage.setItem('name', name)
-  }, [name])
+    window.localStorage.setItem(key, state)
+  }, [key, state])
+
+  return [state, setState]
+}
+
+// destucturing props assignment
+function Greeting({initialName = ''}) {
+  const [name, setName] = useLocalStorageState('name', initialName)
 
   function handleChange(event) {
     setName(event.target.value)
   }
+
   return (
     <div>
       <form>
@@ -27,7 +37,7 @@ function Greeting({initialName = ''}) {
 }
 
 function App() {
-  return <Greeting />
+  return <Greeting initialName="Mike" />
 }
 
 export default App
