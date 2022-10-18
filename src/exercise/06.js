@@ -16,7 +16,6 @@ function PokemonInfo({pokemonName}) {
     error: null,
   })
   const {status, pokemon, error} = state
-  console.log(state)
 
   React.useEffect(() => {
     if (!pokemonName) {
